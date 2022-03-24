@@ -1,0 +1,11 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: >-
+  This template creates an EC2 instance based on the selection of an
+  AMI ID. 
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  ExampleEc2Instance:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: t2.micro
+      ImageId: ami-0c02fb55956c7d316
