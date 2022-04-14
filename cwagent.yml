@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: '2010-09-09'
-Description: 'Template to install CloudWatchAgent on already existing amazon linux. It was validated on amazon linux 2'
+Description: 'Template to install CloudWatchAgent on amazon linux. It was validated on amazon linux 2'
 Parameters:
   KeyName:
     Description: Name of an existing EC2 KeyPair to enable SSH access to the instance
@@ -32,7 +32,13 @@ Parameters:
 Resources:
   EC2Instance:
     Type: AWS::EC2::Instance
-    Metadata:
+    Properties: 
+      ImageId: !Ref InstanceAMI
+      InstanceType: !Ref InstanceType
+      KeyName: !Ref KeyName
+      SecurityGroupIds: 
+        - !Ref InstanceSecurityGroup
+      Metadata:
       AWS::CloudFormation::Init:
         configSets:
           default:
@@ -103,7 +109,6 @@ Resources:
                group: root
              "/lib/systemd/system/cfn-hup.service":
                 content: 
-                  !Sub |
                     [Unit]
                     Description=cfn-hup daemon
                     [Service]
@@ -115,11 +120,9 @@ Resources:
           commands:
             01enable_cfn_hup:
               command: 
-                !Sub |
                   systemctl enable cfn-hup.service
-              02start_cfn_hup:
-              command: 
-                !Sub |
+            02start_cfn_hup:
+              command:
                   systemctl start cfn-hup.service
 
     Properties:
